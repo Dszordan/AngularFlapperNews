@@ -11,5 +11,9 @@ PostSchema.methods.upvote = function(cb){
     this.upvotes ++;
     this.save(cb);
 };
+PostSchema.methods.downvote = function(cb){
+	this.upvotes --;
+	this.save(cb);
+};
 
 mongoose.model('Post', PostSchema);

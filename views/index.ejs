@@ -12,6 +12,7 @@
     <body ng-app="flapperNews">
         <nav class="navbar navbar-default pull-right" ng-controller="NavCtrl">
             <ul class="nav navbar-nav">
+                <li><a href="/#/home">Home</a></li>
                 <li ng-show="isLoggedIn()"><a>{{currentUser()}}</a></li>
                 <li ng-show="isLoggedIn()"><a href="" ng-click="logOut()">Log Out</a></li>
                 <li ng-hide="isLoggedIn()"><a href="/#/login">Log In</a></li>
@@ -28,9 +29,10 @@
           <div class="page-header">
             <h1>Flapper News</h1>
           </div>
-          <div ng-repeat="post in posts | orderBy: '-upvotes'">
+          <div ng-repeat="post in posts">
             <span class="glyphicon glyphicon-thumbs-up" ng-click="incrementUpvotes(post)"></span>
             {{post.upvotes}} 
+            <span class="glyphicon glyphicon-thumbs-down" ng-click="decrementUpvotes(post)"></span>
             <span style="font-size:20px;margin-left:10px;">
                 <a ng-show="post.link" href="{{post.link}}">
                     {{post.title}}
