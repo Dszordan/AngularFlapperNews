@@ -13,7 +13,7 @@
         <nav class="navbar navbar-default pull-right" ng-controller="NavCtrl">
             <ul class="nav navbar-nav">
                 <li ng-show="isLoggedIn()"><a>{{currentUser()}}</a></li>
-                <li ng-show="isLoggedIn()"><a href="">Log Out</a></li>
+                <li ng-show="isLoggedIn()"><a href="" ng-click="logOut()">Log Out</a></li>
                 <li ng-hide="isLoggedIn()"><a href="/#/login">Log In</a></li>
                 <li ng-hide="isLoggedIn()"><a href="/#/register">Register</a></li>
             </ul>
@@ -35,13 +35,16 @@
                 <a ng-show="post.link" href="{{post.link}}">
                     {{post.title}}
                 </a>
+                <span ng-show="post.author">
+                    posted by <a>{{post.author}}</a> | 
+                </span>
                 <span ng-hide="post.link">{{post.title}}</span>
                 <span>
                     <a href="#/posts/{{post._id}}">Comments</a>
                 </span>
             </span>
         </div>
-        <form ng-submit='addPost()' style="margin-top:30px">
+        <form ng-submit='addPost()' style="margin-top:30px" ng-show="isLoggedIn()">
             <div class="form-group">
                 <input type='text' class="form-control" placeholder="Title" ng-model='title'></input>
             </div>
@@ -50,6 +53,9 @@
             </div>
             <button type='submit' class="btn btn-primary">Post</button>
         </form>
+        <div ng-hide="isLoggedIn()">
+          <h3>You need to <a href="/#/login">Log In</a> or <a href="/#/register">Register</a> before you can add a post.</h3>
+        </div>
     </script>
     <script type="text/ng-template" id="/posts.html">
         <div class="page-header">
@@ -62,7 +68,7 @@
               </span>
             </h3>
 
-              <form ng-submit="addComment()" style="margin-top:30px;">
+          <form ng-submit="addComment()" style="margin-top:30px;" ng-show="isLoggedIn()">
             <h3>Add a new comment</h3>
 
             <div class="form-group">
@@ -70,6 +76,9 @@
             </div>
             <button type="submit" class="btn btn-primary">Post</button>
           </form>
+          <div ng-hide="isLoggedIn()">
+          <h3>You need to <a href="/#/login">Log In</a> or <a href="/#/register">Register</a> before you can comment.</h3>
+        </div>
         </div>
 
         <div ng-repeat="comment in post.comments | orderBy:'-upvotes'">
