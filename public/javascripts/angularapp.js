@@ -40,6 +40,35 @@ app.controller('PostsCtrl',[
         };
     }]);
 
+app.controller('AuthCtrl', ['$scope', '$state', 'auth', function($scope, $state, auth){
+    $scope.user = {};
+
+    $scope.register = function(){
+        auth.register($scope.user).error(function(error){
+            $scope.error = error;
+        }).then(function(){
+            $state.go('home');
+        });
+    };
+
+    $scope.logIn = function(){
+        auth.logIn($scope.user).error(function(error){
+            $scope.error = error;
+        }).then(function(){
+            $state.go('home');
+        });
+    };
+}]);
+
+app.controller('NavCtrl',
+    ['$scope',
+    'auth',
+    function($scope, auth){
+        $scope.isLoggedIn = auth.isLoggedIn;
+        $scope.currentUser = auth.currentUser;
+        $scope.logOut = auth.logOut;
+    }]);
+
 app.factory('posts',['$http', function($http){
     //service body
     var o = {
@@ -79,10 +108,10 @@ app.factory('posts',['$http', function($http){
 
 app.factory('auth', ['$http', '$window', function($http, $window){
     var auth = {};
-    auth.getToken = function(token){
+    auth.getToken = function(){
         return $window.localStorage['flapper-news-token']; 
     };
-    auth.saveToken = function(){
+    auth.saveToken = function(token){
         $window.localStorage['flapper-news-token'] = token;
     };
     auth.isLoggedIn = function(){
@@ -134,7 +163,8 @@ app.config([
                     return posts.getAll();
                 }]
               }
-            }).state('posts', {
+            })
+            .state('posts', {
               url: '/posts/{id}',
               templateUrl: '/posts.html',
               controller: 'PostsCtrl',
@@ -143,6 +173,26 @@ app.config([
                         return posts.get($stateParams.id);
                     }]
               }
+            })
+            .state('login', {
+                url: '/login',
+                templateUrl: '/login.html',
+                controller: 'AuthCtrl',
+                onEnter: [ '$state', 'auth', function($state, auth){
+                    if (auth.isLoggedIn()) {
+                        $state.go('home');
+                    };
+                }]
+            })
+            .state('register', {
+                url: '/register',
+                templateUrl: '/register.html',
+                controller: 'AuthCtrl',
+                onEnter: [ '$state', 'auth', function($state, auth){
+                    if (auth.isLoggedIn()) {
+                        $state.go('home');
+                    };
+                }]
             });
 
         $urlRouterProvider.otherwise('home');

@@ -26,11 +26,11 @@ UserSchema.methods.generateJWT = function(){
 	var exp = new Date(today);
 	exp.setDate(today.getDate() + 60);
 
-	return jws.sign({
+	return jwt.sign({
 		_id: this._id,
 		username: this.username,
 		exp: parseInt(exp.getTime() / 1000)
 	}, 'SECRET');
 };
-
+var x = "";
 mongoose.model('User', UserSchema);
